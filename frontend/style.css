@@ -1,0 +1,60 @@
+/* style.css */
+
+/* Reset básico */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+}
+
+header {
+    text-align: center;
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem;
+}
+
+main {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Botão explorar */
+#exploreBtn {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Div do mapa */
+#map {
+    height: 500px;   /* ESSENCIAL para o mapa aparecer */
+    width: 90%;
+    max-width: 1200px;
+    border: 2px solid #ccc;
+    margin-bottom: 1rem;
+}
+
+/* Informações do país */
+#countryInfo {
+    display: none;  /* começa escondido */
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    width: 90%;
+    max-width: 600px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+}
+
+#countryFlag {
+    width: 150px;
+    height: auto;
+    margin: 1rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

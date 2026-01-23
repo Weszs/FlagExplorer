@@ -1,3 +1,6 @@
+# ------------------------
+# AL / Dynamics 365
+# ------------------------
 ### AL ###
 #Template for AL projects for Dynamics 365 Business Central
 #launch.json folder
@@ -20,3 +23,29 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+# ------------------------
+# .NET
+# ------------------------
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+
+# ------------------------
+# Node/Frontend
+# ------------------------
+node_modules/
+dist/
+.env
+
+# ------------------------
+# Logs
+# ------------------------
+*.log
+
+# ------------------------
+# IDE
+# ------------------------
+.idea/
