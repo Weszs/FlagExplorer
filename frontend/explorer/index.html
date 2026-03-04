@@ -21,6 +21,9 @@
 
     <main>
         <button id="exploreBtn">Explorar Países</button>
+        
+        <button onclick="goToQuiz()">🎮 Ir para o Quiz</button>
+
 
         <div id="map"></div>
 
@@ -34,5 +37,11 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
+
+    <script>
+function goToQuiz() {
+    window.location.href = "../quiz/index.html";
+}
+</script>
 </body>
 </html>

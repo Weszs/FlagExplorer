@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>FLAGGED - Global DevOps Map</title>
+
+
+    <button onclick="goToExplorer()">🌍 Voltar ao Explorer</button>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background: #eceff1; }
+        #map { height: 500px; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .quiz-container { margin-top: 20px; padding: 20px; background: white; border-radius: 12px; position: relative; }
+
+        .status-badge { display: inline-block; padding: 5px 12px; background: #4caf50; color: white; border-radius: 20px; font-size: 0.8em; margin-bottom: 10px; }
+
+        /* Score Counter Styling */
+        .score-box { position: absolute; top: 20px; right: 20px; background: #2196f3; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; }
+
+        /* Flag Tooltip Styling - Makes flags appear above markers */
+        .flag-tooltip {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            font-size: 2rem !important;
+            padding: 0 !important;
+        }
+
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+        button { padding: 8px 15px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1976d2; }
+    </style>
+</head>
+<body>
+
+<div class="status-badge">Container Status: Online</div>
+
+<div id="map"></div>
+
+<div class="quiz-container">
+    <div class="score-box">Score: <span id="score">0</span></div>
+
+    <h2 id="country-name">Click a flag to explore</h2>
+    <p id="country-info">The map is served via Nginx on Docker.</p>
+
+    <div id="quiz-section" style="display:none; border-top: 1px solid #ddd; padding-top: 15px;">
+        <p><strong>Quiz:</strong> What is the capital of this country?</p>
+        <input type="text" id="quiz-answer" placeholder="Type your answer...">
+        <button onclick="checkAnswer()">Submit Answer</button>
+    </div>
+</div>
+
+<script>
+function goToExplorer() {
+    window.location.href = "../explorer/index.html";
+}
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map;
+    let selectedCountry = null;
+    let score = 0;
+
+    // Initialize Map
+    function initMap() {
+        map = L.map('map').setView([20, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+    }
+
+    // Load Game Data
+    async function loadGameData() {
+        try {
+            const response = await fetch('countries.json');
+            const countries = await response.json();
+
+            countries.forEach(c => {
+                const marker = L.marker([c.lat, c.lng]).addTo(map);
+
+                // Attach the Emoji Flag as a permanent tooltip
+                marker.bindTooltip(c.flag, {
+                    permanent: true,
+                    direction: 'top',
+                    className: 'flag-tooltip'
+                });
+
+                marker.on('click', () => {
+                    selectedCountry = c;
+                    // Display Flag + Name
+                    document.getElementById('country-name').innerText = c.flag + " " + c.name;
+                    document.getElementById('country-info').innerText = "Analyzing data from Docker container...";
+                    document.getElementById('quiz-section').style.display = 'block';
+                    document.getElementById('quiz-answer').value = ""; // Clear previous answer
+                });
+            });
+            console.log("DevOps Success: " + countries.length + " markers deployed.");
+        } catch (error) {
+            console.error("Deployment Error: Could not fetch JSON", error);
+        }
+    }
+
+    function checkAnswer() {
+        const answer = document.getElementById('quiz-answer').value.trim().toLowerCase();
+
+        // Check if the answer exists within the 'info' string (e.g., "Capital: Dublin")
+        if (selectedCountry.info.toLowerCase().includes(answer) && answer !== "") {
+            score += 10;
+            document.getElementById('score').innerText = score;
+            alert("Correct! +10 Points. Infrastructure and Data are in sync.");
+            document.getElementById('quiz-section').style.display = 'none';
+        } else {
+            alert("Not quite. Hint: " + selectedCountry.info);
+        }
+    }
+
+    initMap();
+    loadGameData();
+</script>
+</body>
+</html>
